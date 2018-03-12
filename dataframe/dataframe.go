@@ -16,6 +16,8 @@ import (
 	"github.com/kniren/gota/series"
 )
 
+const defaultHeadAndTailCount = 5
+
 // DataFrame is a data structure designed for operating on table like data (Such
 // as Excel, CSV files, SQL table results...) where every column have to keep type
 // integrity. As a general rule of thumb, variables are stored on columns where
@@ -1184,6 +1186,44 @@ func (df DataFrame) SetNames(colnames ...string) error {
 // Dims retrieves the dimensions of a DataFrame.
 func (df DataFrame) Dims() (int, int) {
 	return df.Nrow(), df.Ncol()
+}
+
+// Head returns a subset of n records (if specified) from the beginning of the dataframe. If n == 0, a subset limited
+// by a sane default is returned.
+func (df DataFrame) Head(n int) DataFrame {
+	if n == 0 {
+		n = defaultHeadAndTailCount
+	}
+
+	if n >= df.Nrow() {
+		return df
+	}
+
+	indexes := make([]int, 0, n)
+	for i := 0; i < n; i++ {
+		indexes = append(indexes, i)
+	}
+
+	return df.Subset(indexes)
+}
+
+// Tail returns a subset of n records (if specified) from the end of the dataframe. If n == 0, a subset limited
+// by a sane default is returned.
+func (df DataFrame) Tail(n int) DataFrame {
+	if n == 0 {
+		n = defaultHeadAndTailCount
+	}
+
+	if n >= df.Nrow() {
+		return df
+	}
+
+	indexes := make([]int, 0, n)
+	for i := df.nrows - n; i < df.nrows; i++ {
+		indexes = append(indexes, i)
+	}
+
+	return df.Subset(indexes)
 }
 
 // Nrow returns the number of rows on a DataFrame.
