@@ -526,16 +526,16 @@ func RevSort(colname string) Order {
 	return Order{colname, true}
 }
 
-// Arrange sort the rows of a DataFrame according to the given Order
+// Arrange sorts the rows of a DataFrame according to the given Order(s).
 func (df DataFrame) Arrange(order ...Order) DataFrame {
 	if df.Err != nil {
 		return df
 	}
 	if order == nil || len(order) == 0 {
-		return DataFrame{Err: fmt.Errorf("rename: no arguments")}
+		return DataFrame{Err: fmt.Errorf("arrange: no arguments")}
 	}
 
-	// Check that all colnames exist before starting to sort
+	// Check that all colnames exist before starting to sort.
 	for i := 0; i < len(order); i++ {
 		colname := order[i].Colname
 		if df.colIndex(colname) == -1 {
