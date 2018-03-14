@@ -1199,9 +1199,9 @@ func (df DataFrame) Head(n int) DataFrame {
 		return df
 	}
 
-	indexes := make([]int, 0, n)
+	indexes := make([]int, n)
 	for i := 0; i < n; i++ {
-		indexes = append(indexes, i)
+		indexes[i] = i
 	}
 
 	return df.Subset(indexes)
@@ -1214,12 +1214,14 @@ func (df DataFrame) Tail(n int) DataFrame {
 		n = defaultHeadAndTailCount
 	}
 
-	if n >= df.Nrow() {
+	numRows := df.Nrow()
+
+	if n >= numRows {
 		return df
 	}
 
 	indexes := make([]int, 0, n)
-	for i := df.nrows - n; i < df.nrows; i++ {
+	for i := numRows - n; i < numRows; i++ {
 		indexes = append(indexes, i)
 	}
 
